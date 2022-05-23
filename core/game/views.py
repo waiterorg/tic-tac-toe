@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.http import Http404
 
 def index(request):
     if request.method == "POST":
@@ -9,3 +10,13 @@ def index(request):
             %(room_code, char_choice)
         )
     return render(request, "index.html", {})
+
+def game(request, room_code):
+    choice = request.GET.get("choice")
+    if choice not in ['X', 'O']:
+        raise Http404("Choice does not exists")
+    context = {
+        "char_choice": choice, 
+        "room_code": room_code
+    }
+    return render(request, "game.html", context)
